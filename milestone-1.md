@@ -19,7 +19,7 @@ Inspiration from [Unofficial Cornell CS Wiki](https://github.com/CornellCSWiki/C
 
 ## Functionality
 
-There will be a home page with the list of courses. Clicking on the name of the course will reveal the course's ratings, reviews, and average grades. There will be a button that will pull up a form, which users fill out to add their own review. There will also be a list of professors that have taught the course in the past, and reviews can be filtered by professor(s).
+There will be a home page with the list of courses. Clicking on the name of the course will reveal more details about the course: ratings, reviews, average grades, and advice from former students. There will be a button that will pull up a form, which users fill out to add their own review. There will also be a list of professors that have taught the course in the past, and reviews can be filtered by professor(s).
 
 Data to be used:
 - classes
