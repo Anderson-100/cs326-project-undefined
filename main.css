@@ -5,4 +5,6 @@ body {
 .course-name {
   font-size: 28px;
   color: #881c1c;
+  background: none;
+  border: none;
 }

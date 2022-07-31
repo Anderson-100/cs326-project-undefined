@@ -116,10 +116,23 @@ class Button {
   }
 }
 
+class CourseButton {
+  render(courseName) {
+    const button = document.createElement('input');
+    button.classList.add("course-name");
+    button.type = 'button';
+    button.value = courseName;
+    button.addEventListener('click', () => console.log("clicked on " + courseName));
+
+    return button;
+  }
+}
+
 class Courses {
   constructor() {
     this.row = new TableRow();
     this.col = new TableCol();
+    this.button = new CourseButton();
   }
 
   render() {
@@ -132,9 +145,10 @@ class Courses {
     for (const course of courses) {
       // display the name of the course
       const nameRow = this.row.render();
-      nameRow.classList.add("course-name");
       const nameCol = this.col.render();
-      nameCol.innerHTML = course.name;
+      // nameCol.innerHTML = course.name;
+      const courseButton = this.button.render(course.name);
+      nameCol.append(courseButton);
       nameRow.appendChild(nameCol);
       table.appendChild(nameRow);
 
