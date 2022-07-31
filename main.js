@@ -1,36 +1,42 @@
 const courses = [
   {
     name: "COMPSCI 121",
+    title: "Introduction to Problem Solving with Computers",
     difficulty: 3.2,
     grade: "B+",
     rating: 4.2
   },
   {
     name: "COMPSCI 187",
+    title: "Programming with Data Structures",
     difficulty: 4.1,
     grade: "B",
     rating: 3.8
   },
   {
     name: "COMPSCI 220",
+    title: "Programming Methodology",
     difficulty: 4.8,
     grade: "B-",
     rating: 4.5
   },
   {
     name: "COMPSCI 230",
+    title: "Computer System Principles",
     difficulty: 3.5,
     grade: "A-",
     rating: 3.9
   },
   {
     name: "COMPSCI 240",
+    title: "Reasoning Under Uncertainty",
     difficulty: 2.7,
     grade: "A-",
     rating: 4.3
   },
   {
     name: "COMPSCI 250",
+    title: "Introduction to Computation",
     difficulty: 4.3,
     grade: "B+",
     rating: 4.0
@@ -146,11 +152,18 @@ class Courses {
       // display the name of the course
       const nameRow = this.row.render();
       const nameCol = this.col.render();
-      // nameCol.innerHTML = course.name;
       const courseButton = this.button.render(course.name);
       nameCol.append(courseButton);
       nameRow.appendChild(nameCol);
       table.appendChild(nameRow);
+
+      // display the title of the course
+      const titleRow = this.row.render();
+      const titleCol = this.col.render();
+      titleCol.classList.add("title");
+      titleCol.innerHTML = course.title;
+      titleRow.appendChild(titleCol);
+      table.appendChild(titleRow);
 
       // dispaly some basic info about the course
       const infoRow = this.row.render();
