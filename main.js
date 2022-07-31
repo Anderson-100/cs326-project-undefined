@@ -1,19 +1,57 @@
+const courses = [
+  {
+    name: "COMPSCI 121",
+    difficulty: 3.2,
+    grade: "B+",
+    rating: 4.2
+  },
+  {
+    name: "COMPSCI 187",
+    difficulty: 4.1,
+    grade: "B",
+    rating: 3.8
+  },
+  {
+    name: "COMPSCI 220",
+    difficulty: 4.8,
+    grade: "B-",
+    rating: 4.5
+  },
+  {
+    name: "COMPSCI 230",
+    difficulty: 3.5,
+    grade: "A-",
+    rating: 3.9
+  },
+  {
+    name: "COMPSCI 240",
+    difficulty: 2.7,
+    grade: "A-",
+    rating: 4.3
+  },
+  {
+    name: "COMPSCI 250",
+    difficulty: 4.3,
+    grade: "B+",
+    rating: 4.0
+  }
+];
+
 class App {
   constructor() {
     const state = new State();
     this.header1 = new Header1();
     this.header2 = new Header2();
     // this.textarea = new TextArea(state);
-    
-    this.button = new Button(this.textarea);
+    // this.button = new Button(this.textarea);
+    this.courses = new Courses();
   }
 
   render() {
     const element = document.createElement('div');
     element.appendChild(this.header1.render());
     element.appendChild(this.header2.render());
-    // element.appendChild(this.textarea.render());
-    // element.appendChild(this.button.render());
+    element.appendChild(this.courses.render());
     return element;
   }
 }
@@ -75,6 +113,69 @@ class Button {
     const block = document.createElement('div');
     block.appendChild(button);
     return block;
+  }
+}
+
+class Courses {
+  constructor() {
+    this.row = new TableRow();
+    this.col = new TableCol();
+  }
+
+  render() {
+    const table = document.createElement("div");
+    table.id = "courses";
+    table.classList.add("container");
+    table.classList.add("text-center");
+    // table.innerHTML = "hello";
+
+    for (const course of courses) {
+      // display the name of the course
+      const nameRow = this.row.render();
+      nameRow.classList.add("course-name");
+      const nameCol = this.col.render();
+      nameCol.innerHTML = course.name;
+      nameRow.appendChild(nameCol);
+      table.appendChild(nameRow);
+
+      // dispaly some basic info about the course
+      const infoRow = this.row.render();
+
+      const ratingCol = this.col.render();
+      ratingCol.innerHTML = "Overall Rating: <b>" + course.rating + "</b>/5";
+      infoRow.appendChild(ratingCol);
+
+      const diffCol = this.col.render();
+      diffCol.innerHTML = "Difficulty: <b>" + course.difficulty + "</b>/5";
+      infoRow.appendChild(diffCol);
+
+      const gradeCol = this.col.render();
+      gradeCol.innerHTML = "Average Grade: <b>" + course.grade + "</b>";
+      infoRow.appendChild(gradeCol);
+
+      table.appendChild(infoRow);
+
+      // Create a line break for spacing
+      const lineBreak = document.createElement('br');
+      table.appendChild(lineBreak);
+    }
+    return table;
+  }
+}
+
+class TableRow {
+  render() {
+    const row = document.createElement("div");
+    row.classList.add("row");
+    return row;
+  }
+}
+
+class TableCol {
+  render() {
+    const col = document.createElement("div");
+    col.classList.add("col");
+    return col;
   }
 }
 
