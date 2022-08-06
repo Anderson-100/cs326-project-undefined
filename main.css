@@ -1,5 +1,7 @@
 body {
   text-align: center;
+  margin: auto;
+  max-width: 1000px;
 }
 
 .course-name {
@@ -12,4 +14,19 @@ body {
 .title {
   font-size: 20px;
   color: gray;
+}
+
+.desc-box {
+  padding: 50px;
+}
+
+/* .row {
+  border-color: black;
+  border-width: 5px;
+} */
+
+.review-text {
+  text-align: left;
+  max-width: 800px;
+  margin: auto;
 }
