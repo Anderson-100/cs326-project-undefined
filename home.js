@@ -86,7 +86,7 @@ class Header1 {
 class Header2 {
   render() {
     const header = document.createElement('h5');
-    header.textContent = 'Created by Anderson Hsiao';
+    header.textContent = 'Computer Science';
     return header;
   }
 }

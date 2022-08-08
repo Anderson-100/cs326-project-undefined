@@ -4,6 +4,12 @@ body {
   max-width: 1000px;
 }
 
+.page-header {
+  background-color: lightgray;
+  padding-top: 20px;
+  padding-bottom: 30px;
+}
+
 .course-name {
   font-size: 28px;
   color: #881c1c;
