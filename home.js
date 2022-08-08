@@ -45,20 +45,35 @@ const courses = [
 
 class App {
   constructor() {
-    this.header1 = new Header1();
-    this.header2 = new Header2();
+    this.header = new Header();
     this.courses = new Courses();
   }
 
   render() {
     const element = document.createElement('div');
-    element.appendChild(this.header1.render());
-    element.appendChild(this.header2.render());
+    element.appendChild(this.header.render());
     element.appendChild(this.courses.render());
     return element;
   }
 }
 
+class Header {
+  constructor() {
+    this.header1 = new Header1();
+    this.header2 = new Header2();
+  }
+  
+  render() {
+    const block = document.createElement('div');
+    block.classList.add('page-header');
+    block.appendChild(this.header1.render());
+    block.appendChild(this.header2.render());
+
+    return block;
+  }
+}
+
+// Website Name
 class Header1 {
   render() {
     const header = document.createElement('h1');
@@ -67,6 +82,7 @@ class Header1 {
   }
 }
 
+// Subtitle
 class Header2 {
   render() {
     const header = document.createElement('h5');
