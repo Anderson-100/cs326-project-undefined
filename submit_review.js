@@ -1,5 +1,6 @@
 class App {
   constructor() {
+    this.header = new Header();
     this.gradeQuestion = new GradeQuestion();
     this.diffQuestion = new DifficultyQuestion();
     this.ratingQuestion = new RatingQuestion();
@@ -11,6 +12,8 @@ class App {
   render() {
     document.title = "Submit a Review - UMass Course Review "
     const element = document.createElement('div');
+
+    element.appendChild(this.header.render());
 
     element.appendChild(this.gradeQuestion.render());
     element.appendChild(this.break.render());
@@ -27,6 +30,40 @@ class App {
     element.appendChild(this.buttons.render());
 
     return element;
+  }
+}
+
+class Header {
+  constructor() {
+    this.header1 = new Header1();
+    this.header2 = new Header2();
+  }
+  
+  render() {
+    const block = document.createElement('div');
+    block.classList.add('page-header');
+    block.appendChild(this.header1.render());
+    block.appendChild(this.header2.render());
+
+    return block;
+  }
+}
+
+class Header1 {
+  render() {
+    const header = document.createElement('h1');
+    header.textContent = "UMass Course Review";
+    return header;
+  }
+}
+
+class Header2 {
+  render() {
+    const header = document.createElement('h5');
+    // This will display the actual course name when the backend
+    // is implemented
+    header.textContent = "Submit a Review for: {course name}";
+    return header;
   }
 }
 
