@@ -26,11 +26,6 @@ body {
   padding: 50px;
 }
 
-/* .row {
-  border-color: black;
-  border-width: 5px;
-} */
-
 .review-button {
   color: white;
   background-color: #881c1c;
@@ -43,6 +38,10 @@ body {
   text-align: left;
   max-width: 800px;
   margin: auto;
+}
+
+.average {
+  font-size: 30px;
 }
 
 label {

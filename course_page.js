@@ -171,15 +171,17 @@ class Averages {
 
     const ratingDataCol = this.col.render();
     ratingDataCol.innerHTML = this._avg("rating");
-    // console.log(this._avg("rating"));
+    ratingDataCol.classList.add('average');
     dataRow.appendChild(ratingDataCol);
 
     const diffDataCol = this.col.render();
     diffDataCol.innerHTML = this._avg("difficulty");
+    diffDataCol.classList.add('average');
     dataRow.appendChild(diffDataCol);
 
     const gradeDataCol = this.col.render();
     gradeDataCol.innerHTML = this._avgGrade();
+    gradeDataCol.classList.add('average');
     dataRow.appendChild(gradeDataCol);
 
     table.appendChild(dataRow);
