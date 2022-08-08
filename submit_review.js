@@ -142,7 +142,7 @@ class SubmitButton {
   render() {
     const button = document.createElement('input');
     button.type = 'button';
-    button.id = 'submit-review';
+    button.classList.add('submit-review');
     button.value = 'Submit Review';
     return button;
   }

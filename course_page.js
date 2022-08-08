@@ -139,6 +139,7 @@ class LineBreak {
 class AddReviewButton {
   render() {
     const button = document.createElement('input');
+    button.classList.add('review-button');
     button.type = 'button';
     button.value = 'Add Review';
     button.addEventListener('click', () => console.log("button pressed"));
