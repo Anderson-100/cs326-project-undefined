@@ -9,9 +9,9 @@ const courses = [
   {
     name: "COMPSCI 187",
     title: "Programming with Data Structures",
-    difficulty: 4.1,
+    difficulty: 4.0,
     grade: "B",
-    rating: 3.8
+    rating: 2.5
   },
   {
     name: "COMPSCI 220",
