@@ -38,6 +38,10 @@ class App {
   }
 
   render() {
+    // This will show the name of the course being displayed
+    // when I implement the backend
+    document.title = "COMPSCI 187 - UMass Course Review";
+
     const element = document.createElement('div');
     element.appendChild(this.header.render());
     element.appendChild(this.description.render());
