@@ -1,3 +1,4 @@
+// Sample data
 const course = {
   name: "COMPSCI 187",
   title: "Programming with Data Structures",
@@ -31,13 +32,11 @@ class App {
     this.header1 = new Header1();
     this.header2 = new Header2();
     this.description = new Description();
-    
-    // this.textarea = new TextArea(state);
-    
     this.avg = new Averages();
     this.reviewHeader = new ReviewHeader();
     this.addReviewButton = new AddReviewButton();
     this.reviews = new Reviews();
+    this.space = new Space();
   }
 
   render() {
@@ -49,6 +48,7 @@ class App {
 
     element.appendChild(this.reviewHeader.render());
     element.appendChild(this.addReviewButton.render());
+    element.appendChild(this.space.render());
     element.appendChild(this.reviews.render());
     return element;
   }
@@ -115,6 +115,14 @@ class TextArea {
   }
 }
 
+// Creates a <br> element for better spacing
+class Space {
+  render() {
+    return document.createElement('br');
+  }
+}
+
+// Clicking this button will pull up the page to write a review
 class AddReviewButton {
   render() {
     const button = document.createElement('input');
@@ -255,6 +263,7 @@ class Reviews {
     this.row = new TableRow();
     this.col = new TableCol();
     this.button = new CourseButton();
+    this.space = new Space();
   }
 
   render() {
@@ -291,8 +300,8 @@ class Reviews {
       table.appendChild(reviewText);
 
       // Create a line break for spacing
-      const lineBreak = document.createElement('br');
-      table.appendChild(lineBreak);
+      // const lineBreak = document.createElement('br');
+      table.appendChild(this.space.render());
     }
     return table;
   }

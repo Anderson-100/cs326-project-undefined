@@ -103,6 +103,8 @@ class Courses {
 
     for (const course of courses) {
       // display the name of the course
+      // each of these will be a button that gets the info page
+      // of the corresponding course
       const nameRow = this.row.render();
       const nameCol = this.col.render();
       const courseButton = this.button.render(course.name);
