@@ -57,7 +57,7 @@ class App {
 class Header1 {
   render() {
     const header = document.createElement('h1');
-    header.textContent = course.name;
+    header.textContent = "UMass Course Review";
     return header;
   }
 }
@@ -65,7 +65,7 @@ class Header1 {
 class Header2 {
   render() {
     const header = document.createElement('h5');
-    header.textContent = course.title;
+    header.textContent = course.name + ": " + course.title;
     return header;
   }
 }
