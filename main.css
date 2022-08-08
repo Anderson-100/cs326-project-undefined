@@ -30,3 +30,8 @@ body {
   max-width: 800px;
   margin: auto;
 }
+
+label {
+  padding-left: 3px;
+  padding-right: 12px;
+}
