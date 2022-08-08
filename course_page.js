@@ -100,34 +100,6 @@ class Description {
   }
 }
 
-class TextArea {
-  element = null;
-
-  constructor(state) {
-    this.state = state;
-  }
-
-  render() {
-    const textarea = document.createElement('textarea');
-    textarea.id = 'writing_area';
-    textarea.rows = 10;
-    textarea.cols = 50;
-    textarea.value = this.state.get();
-    textarea.addEventListener('keyup', (e) => this.keyup(e));
-    this.element = textarea;
-    return textarea;
-  }
-
-  keyup(e) {
-    this.state.set(e.target.value);
-  }
-
-  clear() {
-    this.state.set('');
-    this.element.value = '';
-  }
-}
-
 // Creates a <br> element for better spacing
 class LineBreak {
   render() {
@@ -334,17 +306,6 @@ class TableCol {
     const col = document.createElement("div");
     col.classList.add("col");
     return col;
-  }
-}
-
-class State {
-  get() {
-    const v = window.localStorage.getItem('state');
-    return v ? v : '';
-  }
-
-  set(value) {
-    window.localStorage.setItem('state', value);
   }
 }
 
