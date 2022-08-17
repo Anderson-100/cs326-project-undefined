@@ -1,0 +1,25 @@
+{
+  "name": "umass-course-review",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "type": "module",
+  "engines": {
+    "node": "16.16.0"
+  },
+  "scripts": {
+    "deploy": "copyfiles client/* server/* .env package*.json deploy",
+    "start": "node server/index.js",
+    "debug": "node --inspect-brk index.js"
+  },
+  "author": "Anderson Hsiao",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "mongodb": "^4.5.0"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1"
+  }
+}

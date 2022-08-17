@@ -4,7 +4,7 @@
 
 #### Home Page
 - Clicking on course name will display the details for that course.
-- More specifically, it will send a **GET** method with `course/?dept=compsci&course={course name}` as the URL and fetch the data for the course that was clicked on *(to be implemented with backend)*.
+- More specifically, it will send a **GET** method with `course/?course={course name}` as the URL and fetch the data for the course that was clicked on *(to be implemented with backend)*.
 
 #### Course Page:
 - Displays the data (description, rating, difficulty, grade, reviews) for a specific course. The data will be different for every course, but the layout and code for every course will be the same.
