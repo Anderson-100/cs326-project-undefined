@@ -4,42 +4,74 @@ const courses = [
     title: "Introduction to Problem Solving with Computers",
     difficulty: 3.2,
     grade: "B+",
-    rating: 4.2
+    rating: 4.2,
+    description: "",
+    reviews: [],
   },
   {
     name: "COMPSCI 187",
     title: "Programming with Data Structures",
     difficulty: 4.0,
     grade: "B",
-    rating: 2.5
+    rating: 2.5,
+    description: "The course introduces and develops methods for designing and implementing abstract data types using the Java programming language. " + 
+    "The main focus is on how to build and encapsulate data objects and their associated operations. " + 
+    "Specific topics include linked structures, recursive structures and algorithms, binary trees, balanced trees, and hash tables. " + 
+    "These topics are fundamental to programming and are essential to other courses in computer science. " + 
+    "The course involves weekly programming assignments, in-class quizzes, discussion section exercises, and multiple exams. " + 
+    "Prerequisites: COMPSCI 121 (or equivalent Java experience). " + 
+    "A grade of B or better in COMPSCI 121 (or a grade of C or better in COMPSCI 186 (or COMPSCI 190D) is required for students enrolling in COMPSCI 187 " + 
+    "and Basic Math Skills (R1). Basic Java language concepts are introduced quickly; if unsure of background, contact instructor. 4 credits.",
+    reviews: [
+      {
+        rating: 4,
+        difficulty: 3,
+        grade: "A-",
+        text: "Solid class. Learned a lot about data structures."
+      },
+      {
+        rating: 1,
+        difficulty: 5,
+        grade: "C+",
+        text: "Very difficult. I hate this class."
+      }
+    ]
   },
   {
     name: "COMPSCI 220",
     title: "Programming Methodology",
     difficulty: 4.8,
     grade: "B-",
-    rating: 4.5
+    rating: 4.5,
+    description: "",
+    reviews: []
   },
   {
     name: "COMPSCI 230",
     title: "Computer System Principles",
     difficulty: 3.5,
     grade: "A-",
-    rating: 3.9
+    rating: 3.9,
+    description: "",
+    reviews: []
   },
   {
     name: "COMPSCI 240",
     title: "Reasoning Under Uncertainty",
     difficulty: 2.7,
     grade: "A-",
-    rating: 4.3
+    rating: 4.3,
+    description: "",
+    reviews: []
   },
   {
     name: "COMPSCI 250",
     title: "Introduction to Computation",
     difficulty: 4.3,
     grade: "B+",
-    rating: 4.0
+    rating: 4.0,
+    description: "",
+    reviews: []
   }
 ];
 
@@ -51,7 +83,7 @@ export class HomePageApp {
 
   render() {
     const element = document.createElement('div');
-    element.appendChild(this.header.render());
+    element.appendChild(this.header.render("UMass Course Review", "Computer Science"));
     element.appendChild(this.courses.render());
     return element;
   }
@@ -64,7 +96,14 @@ class CourseButton {
     button.type = 'button';
     button.value = courseName;
     button.addEventListener('click', () => {
-      console.log("clicked on " + courseName)
+      let courseNumber = 0;
+      for (let i = 0; i < courses.length; i++) {
+        if (courses[i].name === courseName) {
+          courseNumber = i;
+        }
+      }
+      startCoursePage(courseNumber);
+      // console.log(`${courseName} button pressed`);
     });
 
     return button;
@@ -130,15 +169,12 @@ class Courses {
   }
 }
 
-function main() {
-  const app = new HomePageApp();
-  const root = document.getElementById('app');
-  root.appendChild(app.render());
-}
+// ----------------------------------------------
+
 
 // Course Page
 class CoursePageApp {
-  constructor() {
+  constructor(courseNumber) {
     this.header = new Header();
     this.description = new Description();
     this.avg = new Averages();
@@ -146,23 +182,42 @@ class CoursePageApp {
     this.addReviewButton = new AddReviewButton();
     this.reviews = new Reviews();
     this.break = new LineBreak();
+    this.course = courses[courseNumber];
   }
 
-  render(courseName) {
+  render() {
     // This will show the name of the course being displayed
     // when I implement the backend
-    document.title = `${courseName} - UMass Course Review`;
+
+    document.title = `${this.course.name} - UMass Course Review`;
 
     const element = document.createElement('div');
-    element.appendChild(this.header.render());
-    element.appendChild(this.description.render("UMass Course Review", courseName));
-    element.appendChild(this.avg.render());
+    element.appendChild(this.header.render("UMass Course Review", `${this.course.name}: ${this.course.title}`));
+    element.appendChild(this.description.render(this.course));
+    element.appendChild(this.avg.render(this.course));
 
     element.appendChild(this.reviewHeader.render());
     element.appendChild(this.addReviewButton.render());
     element.appendChild(this.break.render());
-    element.appendChild(this.reviews.render());
+    element.appendChild(this.reviews.render(this.course));
     return element;
+  }
+}
+
+class Description {
+  render(course) {
+    const div = document.createElement('div');
+    div.classList.add('desc-box');
+    div.textContent = course.description;
+    return div;
+  }
+}
+
+class ReviewHeader {
+  render() {
+    const header = document.createElement('h2');
+    header.textContent = "Reviews";
+    return header;
   }
 }
 
@@ -187,7 +242,9 @@ class Averages {
     this.button = new CourseButton();
   }
 
-  render() {
+  render(course) {
+    this.course = course;
+
     const table = document.createElement("div");
     table.id = "averages";
     table.classList.add("container");
@@ -247,7 +304,7 @@ class Averages {
    * @returns {string} The message to be displayed on the screen
    */
   _avg(property) {
-    const arr = course.reviews;
+    const arr = this.course.reviews;
     if (arr.length === 0) {
       return "No reviews"
     }
@@ -277,7 +334,7 @@ class Averages {
       "D-": 2,
       "F" : 1
     }
-    const arr = course.reviews;
+    const arr = this.course.reviews;
     const gradeSum = arr.reduce((acc, e) => acc + parseInt(gradeToNum[e.grade]), 0);
 
     const avg = Math.floor(gradeSum / arr.length + 0.5);  // round to nearest int
@@ -300,7 +357,7 @@ class Reviews {
     this.space = new LineBreak();
   }
 
-  render() {
+  render(course) {
     const table = document.createElement("div");
     table.id = "courses";
     table.classList.add("container");
@@ -340,6 +397,11 @@ class Reviews {
     return table;
   }
 }
+
+
+// ----------------------------------------
+
+
 
 // Review App Page
 class ReviewApp {
@@ -385,11 +447,11 @@ class Header {
     this.header2 = new Header2();
   }
   
-  render() {
+  render(h1Text, h2Text) {
     const block = document.createElement('div');
     block.classList.add('page-header');
-    block.appendChild(this.header1.render());
-    block.appendChild(this.header2.render());
+    block.appendChild(this.header1.render(h1Text));
+    block.appendChild(this.header2.render(h2Text));
 
     return block;
   }
@@ -397,18 +459,18 @@ class Header {
 
 // Website Name
 class Header1 {
-  render() {
+  render(text) {
     const header = document.createElement('h1');
-    header.textContent = 'UMass Course Review';
+    header.textContent = text;
     return header;
   }
 }
 
 // Subtitle
 class Header2 {
-  render() {
+  render(text) {
     const header = document.createElement('h5');
-    header.textContent = 'Computer Science';
+    header.textContent = text;
     return header;
   }
 }
@@ -558,5 +620,25 @@ class LineBreak {
   }
 }
 
-main();
+
+
+
+// ----------------------------------------
+
+// Start the app
+function startHomePage() {
+  const app = new HomePageApp();
+  const root = document.getElementById('app');
+  root.innerHTML = "";
+  root.appendChild(app.render());
+}
+
+function startCoursePage(courseNumber) {
+  const app = new CoursePageApp(courseNumber);
+  const root = document.getElementById('app');
+  root.innerHTML = "";
+  root.appendChild(app.render());
+}
+
+startHomePage();
 
