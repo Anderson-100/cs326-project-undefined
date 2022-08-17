@@ -26,7 +26,7 @@ const course = {
   ]
 };
 
-class App {
+export class CoursePageApp {
   constructor() {
     this.header = new Header();
     this.description = new Description();
@@ -323,4 +323,4 @@ function main() {
 
 main();
 
-export { main };
+// export { main };

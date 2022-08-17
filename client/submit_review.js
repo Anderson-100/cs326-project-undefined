@@ -1,4 +1,4 @@
-class App {
+export class ReviewApp {
   constructor() {
     this.header = new Header();
     this.gradeQuestion = new GradeQuestion();
