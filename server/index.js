@@ -11,6 +11,36 @@ class PeopleServer {
   async initRoutes() {
     // Note: when using arrow functions, the "this" binding is lost.
     const self = this;
+
+    this.app.get(`/course?course=${courseName}`, async (req, res) => {
+      try {
+        const { courseName } = req.query;
+        const person = await self.db.createPerson(dept, courseNumber);
+        res.send(JSON.stringify(person));
+      } catch (err) {
+        res.status(500).send(err);
+      }
+    });
+
+    this.app.get(`/review/?course=${courseName}`, async (req, res) => {
+      try {
+        const { courseName } = req.query;
+        const person = await self.db.readPerson(id);
+        res.send(JSON.stringify(person));
+      } catch (err) {
+        res.status(500).send(err);
+      }
+    });
+
+    this.app.post(`/review/?course=${courseName}`, async (req, res) => {
+      try {
+        const { courseName } = req.query;
+        const person = await self.db.updatePerson(id, name, age);
+        res.send(JSON.stringify(person));
+      } catch (err) {
+        res.status(500).send(err);
+      }
+    });
   }
 
   async initDb() {
