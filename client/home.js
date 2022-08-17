@@ -183,6 +183,7 @@ class CoursePageApp {
     this.reviews = new Reviews();
     this.break = new LineBreak();
     this.course = courses[courseNumber];
+    this.courseNumber = courseNumber;
   }
 
   render() {
@@ -197,7 +198,7 @@ class CoursePageApp {
     element.appendChild(this.avg.render(this.course));
 
     element.appendChild(this.reviewHeader.render());
-    element.appendChild(this.addReviewButton.render());
+    element.appendChild(this.addReviewButton.render(this.courseNumber));
     element.appendChild(this.break.render());
     element.appendChild(this.reviews.render(this.course));
     return element;
@@ -223,12 +224,12 @@ class ReviewHeader {
 
 // Clicking this button will pull up the page to write a review
 class AddReviewButton {
-  render() {
+  render(courseNumber) {
     const button = document.createElement('input');
     button.classList.add('review-button');
     button.type = 'button';
     button.value = 'Add Review';
-    button.addEventListener('click', () => console.log("button pressed"));
+    button.addEventListener('click', () => startReviewPage(courseNumber));
     const block = document.createElement('div');
     block.appendChild(button);
     return block;
@@ -378,7 +379,7 @@ class Reviews {
       infoRow.appendChild(diffCol);
 
       const gradeCol = this.col.render();
-      gradeCol.innerHTML = "Average Grade: <b>" + review.grade + "</b>";
+      gradeCol.innerHTML = "Grade: <b>" + review.grade + "</b>";
       infoRow.appendChild(gradeCol);
 
       table.appendChild(infoRow);
@@ -404,8 +405,8 @@ class Reviews {
 
 
 // Review App Page
-class ReviewApp {
-  constructor() {
+class ReviewPageApp {
+  constructor(courseNumber) {
     this.header = new Header();
     this.gradeQuestion = new GradeQuestion();
     this.diffQuestion = new DifficultyQuestion();
@@ -413,13 +414,16 @@ class ReviewApp {
     this.reviewText = new ReviewTextBox();
     this.buttons = new ButtonsDiv();
     this.break = new LineBreak();
+
+    this.course = courses[courseNumber];
+    this.courseNumber = courseNumber;
   }
 
-  render(courseName) {
+  render() {
     document.title = "Submit a Review - UMass Course Review "
     const element = document.createElement('div');
 
-    element.appendChild(this.header.render("UMass Course Review", `Submit a Review for: ${courseName}`));
+    element.appendChild(this.header.render("UMass Course Review", `Submit a Review for: ${this.course.name}`));
 
     element.appendChild(this.gradeQuestion.render());
     element.appendChild(this.break.render());
@@ -433,7 +437,7 @@ class ReviewApp {
     element.appendChild(this.reviewText.render());
     element.appendChild(this.break.render());
 
-    element.appendChild(this.buttons.render());
+    element.appendChild(this.buttons.render(this.courseNumber));
 
     return element;
   }
@@ -522,11 +526,13 @@ class MultipleChoiceQuestion {
       label.htmlFor = option;
       label.textContent = option;
       form.appendChild(label);
-
-      // form.appendChild(this.break.render());
     });
 
     div.appendChild(form);
+
+    const resultDiv = document.createElement('div');
+    resultDiv.id = name + "Result";
+    div.appendChild(resultDiv);
     return div;
   }
 }
@@ -566,7 +572,7 @@ class DifficultyQuestion {
 
   render() {
     return this.mcq.render(
-      "rating",
+      "difficulty",
       "How difficult was this course? (1 is easy, 5 is hard)",
       ["1","2","3","4","5"]
     );
@@ -596,19 +602,53 @@ class ButtonsDiv {
     this.submit = new SubmitButton();
   }
 
-  render() {
+  render(courseNumber) {
     const div = document.createElement('div');
-    div.appendChild(this.submit.render());
+    div.appendChild(this.submit.render(courseNumber));
     return div;
   }
 }
 
 class SubmitButton {
-  render() {
+  render(courseNumber) {
     const button = document.createElement('input');
     button.type = 'button';
     button.classList.add('review-button');
     button.value = 'Submit Review';
+    button.addEventListener('click', () => {
+      
+      function getInput(question) {
+        const qElements = document.getElementsByName(question);
+
+        for (let i = 0; i < qElements.length; i++) {
+          if (qElements[i].checked) {
+            return qElements[i].value;
+          }
+        }
+        return undefined;
+      }
+      
+      const gradesQ = getInput("grade");
+      const diffQ = getInput("difficulty");
+      const ratingQ = getInput("rating");
+      const textBox = document.getElementById("review_text");
+      const reviewText = textBox.value.trim()
+
+      if (!gradesQ || !diffQ || !ratingQ || reviewText === "") {
+        alert("Please fill in all the questions");
+      }
+      else {
+        const newReview = {
+          grade: gradesQ,
+          difficulty: diffQ,
+          rating: ratingQ,
+          text: reviewText
+        }
+        courses[courseNumber].reviews.push(newReview);
+
+        startCoursePage(courseNumber);
+      }
+    })
     return button;
   }
 }
@@ -635,6 +675,13 @@ function startHomePage() {
 
 function startCoursePage(courseNumber) {
   const app = new CoursePageApp(courseNumber);
+  const root = document.getElementById('app');
+  root.innerHTML = "";
+  root.appendChild(app.render());
+}
+
+function startReviewPage(courseNumber) {
+  const app = new ReviewPageApp(courseNumber);
   const root = document.getElementById('app');
   root.innerHTML = "";
   root.appendChild(app.render());
