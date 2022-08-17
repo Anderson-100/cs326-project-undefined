@@ -589,21 +589,21 @@ class LineBreak {
 // ----------------------------------------
 
 // Start the app
-function startHomePage() {
+export function startHomePage() {
   const app = new HomePageApp();
   const root = document.getElementById('app');
   root.innerHTML = "";
   root.appendChild(app.render());
 }
 
-function startCoursePage(courseNumber) {
+export function startCoursePage(courseNumber) {
   const app = new CoursePageApp(courseNumber);
   const root = document.getElementById('app');
   root.innerHTML = "";
   root.appendChild(app.render());
 }
 
-function startReviewPage(courseNumber) {
+export function startReviewPage(courseNumber) {
   const app = new ReviewPageApp(courseNumber);
   const root = document.getElementById('app');
   root.innerHTML = "";
