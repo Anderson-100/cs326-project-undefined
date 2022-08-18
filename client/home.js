@@ -125,28 +125,28 @@ class CoursePageApp {
   async render() {
     // This will show the name of the course being displayed
     // when I implement the backend
-    this.course = await crud.getCourse(this.course);
+    const courseObj = await crud.getCourse(this.course);
 
-    document.title = `${this.course.name} - UMass Course Review`;
+    document.title = `${courseObj.name} - UMass Course Review`;
 
     const element = document.createElement('div');
     element.appendChild(this.header.render("UMass Course Review", `${this.course.name}: ${this.course.title}`));
-    element.appendChild(this.description.render(this.course));
-    element.appendChild(this.avg.render(this.course));
+    element.appendChild(this.description.render(courseObj.description));
+    element.appendChild(this.avg.render(courseObj));
 
     element.appendChild(this.reviewHeader.render());
-    element.appendChild(this.addReviewButton.render(this.courseNumber));
+    element.appendChild(this.addReviewButton.render(this.course));
     element.appendChild(this.break.render());
-    element.appendChild(this.reviews.render(this.course));
+    element.appendChild(this.reviews.render(courseObj.reviews));
     return element;
   }
 }
 
 class Description {
-  render(course) {
+  render(text) {
     const div = document.createElement('div');
     div.classList.add('desc-box');
-    div.textContent = course.description;
+    div.textContent = text;
     return div;
   }
 }
@@ -161,12 +161,12 @@ class ReviewHeader {
 
 // Clicking this button will pull up the page to write a review
 class AddReviewButton {
-  render(courseNumber) {
+  render(courseName) {
     const button = document.createElement('input');
     button.classList.add('review-button');
     button.type = 'button';
     button.value = 'Add Review';
-    button.addEventListener('click', () => startReviewPage(courseNumber));
+    button.addEventListener('click', () => startReviewPage(courseName));
     const block = document.createElement('div');
     block.appendChild(button);
     return block;
@@ -177,7 +177,7 @@ class Averages {
   constructor() {
     this.row = new TableRow();
     this.col = new TableCol();
-    this.button = new CourseButton();
+    // this.button = new CourseButton();
   }
 
   render(course) {
@@ -246,7 +246,6 @@ class Averages {
     if (arr.length === 0) {
       return "No reviews"
     }
-
     const avg = arr.reduce((acc, e) => acc + parseInt(e[property]), 0) / arr.length;
     return "<b>" + avg.toFixed(1) + "</b>/5";  // rounds to 1 decimal point
   }
@@ -295,14 +294,14 @@ class Reviews {
     this.space = new LineBreak();
   }
 
-  render(course) {
+  render(courseReviews) {
     const table = document.createElement("div");
     table.id = "courses";
     table.classList.add("container");
     table.classList.add("text-center");
     // table.innerHTML = "hello";
 
-    for (const review of course.reviews) {
+    for (const review of courseReviews) {
 
       // dispaly some basic info about the course
       const infoRow = this.row.render();
@@ -343,7 +342,7 @@ class Reviews {
 
 // Review App Page
 class ReviewPageApp {
-  constructor(courseNumber) {
+  constructor(course) {
     this.header = new Header();
     this.gradeQuestion = new GradeQuestion();
     this.diffQuestion = new DifficultyQuestion();
@@ -351,12 +350,10 @@ class ReviewPageApp {
     this.reviewText = new ReviewTextBox();
     this.buttons = new ButtonsDiv();
     this.break = new LineBreak();
-
-    this.course = courses[courseNumber];
-    this.courseNumber = courseNumber;
+    this.course = course;
   }
 
-  render() {
+  async render() {
     document.title = "Submit a Review - UMass Course Review "
     const element = document.createElement('div');
 
@@ -374,7 +371,7 @@ class ReviewPageApp {
     element.appendChild(this.reviewText.render());
     element.appendChild(this.break.render());
 
-    element.appendChild(this.buttons.render(this.courseNumber));
+    element.appendChild(this.buttons.render(this.course));
 
     return element;
   }
@@ -539,15 +536,15 @@ class ButtonsDiv {
     this.submit = new SubmitButton();
   }
 
-  render(courseNumber) {
+  render(course) {
     const div = document.createElement('div');
-    div.appendChild(this.submit.render(courseNumber));
+    div.appendChild(this.submit.render(course));
     return div;
   }
 }
 
 class SubmitButton {
-  render(courseNumber) {
+  render(course) {
     const button = document.createElement('input');
     button.type = 'button';
     button.classList.add('review-button');
@@ -581,9 +578,9 @@ class SubmitButton {
           rating: ratingQ,
           text: reviewText
         }
-        courses[courseNumber].reviews.push(newReview);
-
-        startCoursePage(courseNumber);
+        // courses[courseNumber].reviews.push(newReview);
+        // console.log(course);
+        startCoursePage(course);
       }
     })
     return button;
