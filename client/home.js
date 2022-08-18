@@ -70,16 +70,30 @@ class Courses {
       // dispaly some basic info about the course
       const infoRow = this.row.render();
 
+      function generateAvgText(element, isNumber) {
+        if (courses[course][element] === 0) { 
+          return "<b>N/A<b>";
+        }
+        let text = "<b>" + courses[course][element] + "</b>";
+        if (isNumber) {
+          text += "/5";
+        }
+        return text;
+      }
+
       const ratingCol = this.col.render();
-      ratingCol.innerHTML = "Overall Rating: <b>" + courses[course].rating + "</b>/5";
+      const rating = generateAvgText("rating", true);
+      ratingCol.innerHTML = "Overall Rating: " + rating;
       infoRow.appendChild(ratingCol);
 
       const diffCol = this.col.render();
-      diffCol.innerHTML = "Difficulty: <b>" + courses[course].difficulty + "</b>/5";
+      const difficulty = generateAvgText("difficulty", true)
+      diffCol.innerHTML = "Difficulty: " + difficulty;
       infoRow.appendChild(diffCol);
 
       const gradeCol = this.col.render();
-      gradeCol.innerHTML = "Average Grade: <b>" + courses[course].grade + "</b>";
+      const grade = generateAvgText("grade", false);
+      gradeCol.innerHTML = "Average Grade: " + grade;
       infoRow.appendChild(gradeCol);
 
       table.appendChild(infoRow);
