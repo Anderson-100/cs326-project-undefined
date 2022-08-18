@@ -5,16 +5,13 @@ export async function getAllCourses() {
       method: 'GET',
     }
   );
-  // console.log("yeet");
-  // console.log(response.status);
   const data = await response.json();
-  // console.log(data);
   return data;
 }
 
-export async function getCourse(courseName) {
+export async function getCourse(course) {
   const response = await fetch(
-    `/course/${courseName}`,
+    `/course/${course}`,
     {
       method: 'GET',
     }

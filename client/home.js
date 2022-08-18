@@ -1,5 +1,7 @@
 import * as crud from "./crud.js";
 
+// let ALL_COURSES_OBJ = await crud.getAllCourses();
+
 class HomePageApp {
   constructor() {
     this.header = new Header();
@@ -15,20 +17,13 @@ class HomePageApp {
 }
 
 class CourseButton {
-  render(courseName) {
+  render(course, courseObj) {
     const button = document.createElement('input');
     button.classList.add("course-name");
     button.type = 'button';
-    button.value = courseName;
+    button.value = courseObj.name;
     button.addEventListener('click', () => {
-      let courseNumber = 0;
-      for (let i = 0; i < courses.length; i++) {
-        if (courses[i].name === courseName) {
-          courseNumber = i;
-        }
-      }
-      startCoursePage(courseNumber);
-      // console.log(`${courseName} button pressed`);
+      startCoursePage(course);
     });
 
     return button;
@@ -56,10 +51,10 @@ class Courses {
       // display the name of the course
       // each of these will be a button that gets the info page
       // of the corresponding course
-      console.log(course);
+      // console.log(course);
       const nameRow = this.row.render();
       const nameCol = this.col.render();
-      const courseButton = this.button.render(courses[course].name);
+      const courseButton = this.button.render(course, courses[course]);
       nameCol.append(courseButton);
       nameRow.appendChild(nameCol);
       table.appendChild(nameRow);
@@ -102,7 +97,7 @@ class Courses {
 
 // Course Page
 class CoursePageApp {
-  constructor(courseNumber) {
+  constructor(course) {
     this.header = new Header();
     this.description = new Description();
     this.avg = new Averages();
@@ -110,13 +105,13 @@ class CoursePageApp {
     this.addReviewButton = new AddReviewButton();
     this.reviews = new Reviews();
     this.break = new LineBreak();
-    this.course = courses[courseNumber];
-    this.courseNumber = courseNumber;
+    this.course = course;
   }
 
-  render() {
+  async render() {
     // This will show the name of the course being displayed
     // when I implement the backend
+    this.course = await crud.getCourse(this.course);
 
     document.title = `${this.course.name} - UMass Course Review`;
 
@@ -601,18 +596,18 @@ export async function startHomePage() {
   root.appendChild(await app.render());
 }
 
-export function startCoursePage(courseNumber) {
-  const app = new CoursePageApp(courseNumber);
+export async function startCoursePage(courseName) {
+  const app = new CoursePageApp(courseName);
   const root = document.getElementById('app');
   root.innerHTML = "";
-  root.appendChild(app.render());
+  root.appendChild(await app.render());
 }
 
-export function startReviewPage(courseNumber) {
-  const app = new ReviewPageApp(courseNumber);
+export async function startReviewPage(courseName) {
+  const app = new ReviewPageApp(courseName);
   const root = document.getElementById('app');
   root.innerHTML = "";
-  root.appendChild(app.render());
+  root.appendChild(await app.render());
 }
 
 startHomePage();

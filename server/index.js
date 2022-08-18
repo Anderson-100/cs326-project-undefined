@@ -13,15 +13,19 @@ class Server {
     const self = this;
 
     this.app.get('/getAllCourses', async (req, res) => {
-      const courses = await self.db.getAllCourses();
-      res.send(courses);
+      try {
+        const courses = await self.db.getAllCourses();
+        res.send(courses);
+      } catch (err) {
+        res.status(500).send(err);
+      }
     });
 
-    this.app.get(`/course/:courseName`, async (req, res) => {
+    this.app.get(`/course/:course`, async (req, res) => {
       try {
-        const { courseName } = req.params;
-        const person = await self.db.getCourse(courseName);
-        res.send(JSON.stringify(person));
+        const { course } = req.params;
+        const courseObj = await self.db.getCourse(course);
+        res.send(courseObj);
       } catch (err) {
         res.status(500).send(err);
       }

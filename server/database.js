@@ -9,9 +9,12 @@ export class Database {
   }
 
   // READ a course from the database.
-  async getCourse(courseName) {
-    const res = await this.collection.findOne({ name: courseName });
-    return res;
+  async getCourse(course) {
+    const allCourses = await this.getAllCourses();
+    const courseObj = allCourses[course];
+    return courseObj;
+    // const res = await this.collection.findOne({ name: courseName });
+    // return res;
   }
 
   // READ all courses from the database.
