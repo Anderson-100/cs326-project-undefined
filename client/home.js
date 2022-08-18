@@ -113,6 +113,7 @@ class Courses {
 class CoursePageApp {
   constructor(course) {
     this.header = new Header();
+    this.backButton = new BackToHomeButton();
     this.description = new Description();
     this.avg = new Averages();
     this.reviewHeader = new ReviewHeader();
@@ -131,6 +132,8 @@ class CoursePageApp {
 
     const element = document.createElement('div');
     element.appendChild(this.header.render("UMass Course Review", `${courseObj.name}: ${courseObj.title}`));
+    element.appendChild(this.backButton.render());
+
     element.appendChild(this.description.render(courseObj.description));
     element.appendChild(this.avg.render(courseObj));
 
@@ -139,6 +142,19 @@ class CoursePageApp {
     element.appendChild(this.break.render());
     element.appendChild(this.reviews.render(courseObj.reviews));
     return element;
+  }
+}
+
+class BackToHomeButton {
+  render() {
+    const button = document.createElement('input');
+    button.type = 'button';
+    button.classList.add('review-button');
+    button.value = 'Back';
+    button.addEventListener('click', () => {
+      startHomePage();
+    });
+    return button;
   }
 }
 
@@ -483,13 +499,28 @@ class ReviewTextBox {
 
 class ButtonsDiv {
   constructor() {
+    this.back = new BackToCourseButton();
     this.submit = new SubmitButton();
   }
 
   render(course) {
     const div = document.createElement('div');
+    div.appendChild(this.back.render(course));
     div.appendChild(this.submit.render(course));
     return div;
+  }
+}
+
+class BackToCourseButton {
+  render(course) {
+    const button = document.createElement('input');
+    button.type = 'button';
+    button.classList.add('review-button');
+    button.value = 'Back';
+    button.addEventListener('click', () => {
+      startCoursePage(course);
+    });
+    return button;
   }
 }
 
