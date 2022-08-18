@@ -12,6 +12,11 @@ class Server {
     // Note: when using arrow functions, the "this" binding is lost.
     const self = this;
 
+    this.app.get('/getAllCourses', async (req, res) => {
+      const courses = await self.db.getAllCourses();
+      res.send(courses);
+    });
+
     this.app.get(`/course/:courseName`, async (req, res) => {
       try {
         const { courseName } = req.params;
@@ -22,30 +27,27 @@ class Server {
       }
     });
 
-    this.app.get(`/review/?course=${courseName}`, async (req, res) => {
-      try {
-        const { courseName } = req.query;
-        const person = await self.db.readPerson(id);
-        res.send(JSON.stringify(person));
-      } catch (err) {
-        res.status(500).send(err);
-      }
-    });
+    // this.app.get(`/review/`, async (req, res) => {
+    //   try {
+    //     const { courseName } = req.query;
+    //     const person = await self.db.readPerson(id);
+    //     res.send(JSON.stringify(person));
+    //   } catch (err) {
+    //     res.status(500).send(err);
+    //   }
+    // });
 
-    this.app.post(`/review/?course=${courseName}`, async (req, res) => {
-      try {
-        const { courseName } = req.query;
-        const person = await self.db.updatePerson(id, name, age);
-        res.send(JSON.stringify(person));
-      } catch (err) {
-        res.status(500).send(err);
-      }
-    });
+    // this.app.post(`/review/`, async (req, res) => {
+    //   try {
+    //     const { courseName } = req.query;
+    //     const person = await self.db.updatePerson(id, name, age);
+    //     res.send(JSON.stringify(person));
+    //   } catch (err) {
+    //     res.status(500).send(err);
+    //   }
+    // });
 
-    this.app.get('/', async (req, res) => {
-      const courses = await self.db.getAllCourses();
-      res.send(courses);
-    });
+    
   }
 
   async initDb() {
@@ -63,5 +65,5 @@ class Server {
   }
 }
 
-const server = new Server(process.env.DATABASE_URL);
+const server = new Server(process.env.MONGODB_URI);
 server.start();

@@ -1,11 +1,14 @@
 export async function getAllCourses() {
   const response = await fetch(
-    '/',
+    '/getAllCourses',
     {
       method: 'GET',
     }
   );
+  // console.log("yeet");
+  // console.log(response.status);
   const data = await response.json();
+  // console.log(data);
   return data;
 }
 

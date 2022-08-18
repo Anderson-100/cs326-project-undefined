@@ -1,4 +1,4 @@
-import { getAllCourses } from "./crud/js";
+import * as crud from "./crud.js";
 
 class HomePageApp {
   constructor() {
@@ -6,10 +6,10 @@ class HomePageApp {
     this.courses = new Courses();
   }
 
-  render() {
+  async render() {
     const element = document.createElement('div');
     element.appendChild(this.header.render("UMass Course Review", "Computer Science"));
-    element.appendChild(this.courses.render());
+    element.appendChild(await this.courses.render());
     return element;
   }
 }
@@ -43,22 +43,23 @@ class Courses {
     this.lineBreak = new LineBreak();
   }
 
-  render() {
+  async render() {
     const table = document.createElement("div");
     table.id = "courses";
     table.classList.add("container");
     table.classList.add("text-center");
     // table.innerHTML = "hello";
 
-    const courses = getAllCourses();
-
-    for (const course of courses) {
+    const courses = await crud.getAllCourses();
+    // console.log(courses);
+    for (const course in courses) {
       // display the name of the course
       // each of these will be a button that gets the info page
       // of the corresponding course
+      console.log(course);
       const nameRow = this.row.render();
       const nameCol = this.col.render();
-      const courseButton = this.button.render(course.name);
+      const courseButton = this.button.render(courses[course].name);
       nameCol.append(courseButton);
       nameRow.appendChild(nameCol);
       table.appendChild(nameRow);
@@ -67,7 +68,7 @@ class Courses {
       const titleRow = this.row.render();
       const titleCol = this.col.render();
       titleCol.classList.add("title");
-      titleCol.innerHTML = course.title;
+      titleCol.innerHTML = courses[course].title;
       titleRow.appendChild(titleCol);
       table.appendChild(titleRow);
 
@@ -75,15 +76,15 @@ class Courses {
       const infoRow = this.row.render();
 
       const ratingCol = this.col.render();
-      ratingCol.innerHTML = "Overall Rating: <b>" + course.rating + "</b>/5";
+      ratingCol.innerHTML = "Overall Rating: <b>" + courses[course].rating + "</b>/5";
       infoRow.appendChild(ratingCol);
 
       const diffCol = this.col.render();
-      diffCol.innerHTML = "Difficulty: <b>" + course.difficulty + "</b>/5";
+      diffCol.innerHTML = "Difficulty: <b>" + courses[course].difficulty + "</b>/5";
       infoRow.appendChild(diffCol);
 
       const gradeCol = this.col.render();
-      gradeCol.innerHTML = "Average Grade: <b>" + course.grade + "</b>";
+      gradeCol.innerHTML = "Average Grade: <b>" + courses[course].grade + "</b>";
       infoRow.appendChild(gradeCol);
 
       table.appendChild(infoRow);
@@ -593,11 +594,11 @@ class LineBreak {
 // ----------------------------------------
 
 // Start the app
-export function startHomePage() {
+export async function startHomePage() {
   const app = new HomePageApp();
   const root = document.getElementById('app');
   root.innerHTML = "";
-  root.appendChild(app.render());
+  root.appendChild(await app.render());
 }
 
 export function startCoursePage(courseNumber) {
