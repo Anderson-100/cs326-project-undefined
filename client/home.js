@@ -234,56 +234,6 @@ class Averages {
     
     return table;
   }
-  /**
-   * Calculates the average value of the inputted property to be displayed on screen.
-   * 
-   * @param {string} property The property of the review to be averaged 
-   *                          (rating or difficulty)
-   * @returns {string} The message to be displayed on the screen
-   */
-  _avg(property) {
-    const arr = this.course.reviews;
-    if (arr.length === 0) {
-      return "No reviews"
-    }
-    const avg = arr.reduce((acc, e) => acc + parseInt(e[property]), 0) / arr.length;
-    return "<b>" + avg.toFixed(1) + "</b>/5";  // rounds to 1 decimal point
-  }
-
-  /**
-   * Calculates the average grade obtained from reviews by mapping each letter grade
-   * to a number.
-   * 
-   * @returns {string} The message to be displayed on the screen:
-   *                   average grade, or "No reviews" if there are no reviews.
-   */
-  _avgGrade() {
-    const gradeToNum = {
-      "A" : 11,
-      "A-": 10,
-      "B+": 9,
-      "B" : 8,
-      "B-": 7,
-      "C+": 6,
-      "C-": 5,
-      "D+": 4,
-      "D" : 3,
-      "D-": 2,
-      "F" : 1
-    }
-    const arr = this.course.reviews;
-    const gradeSum = arr.reduce((acc, e) => acc + parseInt(gradeToNum[e.grade]), 0);
-
-    const avg = Math.floor(gradeSum / arr.length + 0.5);  // round to nearest int
-
-    for (const letter in gradeToNum) {
-      if (gradeToNum[letter] === avg) {
-        return "<b>" + letter + "</b>";
-      }
-    }
-    
-    return "No reviews";
-  }
 }
 
 class Reviews {

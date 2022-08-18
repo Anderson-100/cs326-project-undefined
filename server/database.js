@@ -26,7 +26,7 @@ export class Database {
     // return res;
   }
 
-  // CREATE a review in the database.
+  // CREATE a review in the database and update average values
   async addReview(courseName, reviewObj) {
     // console.log("database.js");
     // console.log(reviewObj);
@@ -37,6 +37,46 @@ export class Database {
     } else {
       courseObj.reviews = [reviewObj];
     }
+
+    function avg(property) {
+      const arr = courseObj.reviews;
+      if (arr.length === 0) {
+        return "No reviews"
+      }
+      const avg = arr.reduce((acc, e) => acc + parseInt(e[property]), 0) / arr.length;
+      courseObj[property] = avg.toFixed(1);
+    }
+
+    function avgGrade() {
+      const gradeToNum = {
+        "A" : 11,
+        "A-": 10,
+        "B+": 9,
+        "B" : 8,
+        "B-": 7,
+        "C+": 6,
+        "C-": 5,
+        "D+": 4,
+        "D" : 3,
+        "D-": 2,
+        "F" : 1
+      }
+      const arr = courseObj.reviews;
+      const gradeSum = arr.reduce((acc, e) => acc + parseInt(gradeToNum[e.grade]), 0);
+  
+      const avg = Math.floor(gradeSum / arr.length + 0.5);  // round to nearest int
+  
+      for (const letter in gradeToNum) {
+        if (gradeToNum[letter] === avg) {
+          // Save new grade
+          this.course.grade = letter;
+        }
+      }
+    }
+
+    avg("rating");
+    avg("difficulty");
+    avgGrade();
 
     await this._write(allCourses);
 
