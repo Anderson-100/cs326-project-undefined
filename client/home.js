@@ -1,3 +1,5 @@
+import { getAllCourses } from "./crud/js";
+
 class HomePageApp {
   constructor() {
     this.header = new Header();
@@ -47,6 +49,8 @@ class Courses {
     table.classList.add("container");
     table.classList.add("text-center");
     // table.innerHTML = "hello";
+
+    const courses = getAllCourses();
 
     for (const course of courses) {
       // display the name of the course

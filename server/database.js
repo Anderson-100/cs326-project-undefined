@@ -42,7 +42,19 @@ export class PeopleDatabase {
     this.client.close();
   }
 
-  // CREATE a user in the database.
+  // READ a course from the database.
+  async getCourse(courseName) {
+    const res = await this.collection.findOne({ name: courseName });
+    return res;
+  }
+
+  // READ all courses from the database.
+  async getAllCourses() {
+    const res = await this.collection.find({}).toArray();
+    return res;
+  }
+
+  // CREATE a review in the database.
   async addReview(courseName, reviewObj) {
     const courseObj = await this.getCourse(courseName);
     if ('reviews' in courseObj) {
@@ -57,13 +69,7 @@ export class PeopleDatabase {
     return res;
   }
 
-  // READ a user from the database.
-  async getCourse(courseName) {
-    const res = await this.collection.findOne({ name: courseName });
-    return res;
-  }
-
-  // DELETE a user from the database.
+  // DELETE a review from the database.
   async deleteReview(id) {
     // Note: the result received back from MongoDB does not contain the
     // entire document that was deleted from the database. Instead, it
@@ -72,9 +78,5 @@ export class PeopleDatabase {
     return res;
   }
 
-  // READ all people from the database.
-  async readAllPeople() {
-    const res = await this.collection.find({}).toArray();
-    return res;
-  }
+
 }

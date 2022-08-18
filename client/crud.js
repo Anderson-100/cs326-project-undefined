@@ -1,3 +1,14 @@
+export async function getAllCourses() {
+  const response = await fetch(
+    '/',
+    {
+      method: 'GET',
+    }
+  );
+  const data = await response.json();
+  return data;
+}
+
 export async function getCourse(courseName) {
   const response = await fetch(
     `/course/${courseName}`,

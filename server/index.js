@@ -1,7 +1,7 @@
 import express from 'express';
-import { PeopleDatabase } from './people-db.js';
+import { Database } from './database.js';
 
-class PeopleServer {
+class Server {
   constructor(dburl) {
     this.dburl = dburl;
     this.app = express();
@@ -12,10 +12,10 @@ class PeopleServer {
     // Note: when using arrow functions, the "this" binding is lost.
     const self = this;
 
-    this.app.get(`/course?course=${courseName}`, async (req, res) => {
+    this.app.get(`/course/:courseName`, async (req, res) => {
       try {
-        const { courseName } = req.query;
-        const person = await self.db.createPerson(dept, courseNumber);
+        const { courseName } = req.params;
+        const person = await self.db.getCourse(courseName);
         res.send(JSON.stringify(person));
       } catch (err) {
         res.status(500).send(err);
@@ -41,11 +41,16 @@ class PeopleServer {
         res.status(500).send(err);
       }
     });
+
+    this.app.get('/', async (req, res) => {
+      const courses = await self.db.getAllCourses();
+      res.send(courses);
+    });
   }
 
   async initDb() {
-    this.db = new PeopleDatabase(this.dburl);
-    await this.db.connect();
+    this.db = new Database(this.dburl);
+    // await this.db.connect();
   }
 
   async start() {
@@ -58,5 +63,5 @@ class PeopleServer {
   }
 }
 
-const server = new PeopleServer(process.env.DATABASE_URL);
+const server = new Server(process.env.DATABASE_URL);
 server.start();
