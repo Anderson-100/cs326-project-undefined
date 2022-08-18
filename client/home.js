@@ -119,7 +119,7 @@ class CoursePageApp {
     this.addReviewButton = new AddReviewButton();
     this.reviews = new Reviews();
     this.break = new LineBreak();
-    this.course = course;
+    this.course = course; // ex: "compsci_121"
   }
 
   async render() {

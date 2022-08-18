@@ -67,9 +67,11 @@ export class Database {
       const avg = Math.floor(gradeSum / arr.length + 0.5);  // round to nearest int
   
       for (const letter in gradeToNum) {
+        // console.log(courseObj.grade);
         if (gradeToNum[letter] === avg) {
           // Save new grade
-          this.course.grade = letter;
+          courseObj.grade = letter;
+          break;
         }
       }
     }
