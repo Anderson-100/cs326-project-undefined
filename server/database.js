@@ -28,17 +28,23 @@ export class Database {
 
   // CREATE a review in the database.
   async addReview(courseName, reviewObj) {
-    const courseObj = await this.getCourse(courseName);
+    // console.log("database.js");
+    // console.log(reviewObj);
+    const allCourses = await this.getAllCourses();
+    const courseObj = allCourses[courseName];
     if ('reviews' in courseObj) {
       courseObj.reviews.push(reviewObj);
     } else {
       courseObj.reviews = [reviewObj];
     }
-    await this.collection.replaceOne({ name: courseName }, courseObj);
+
+    await this._write(allCourses);
+
+    // await this.collection.replaceOne({ name: courseName }, courseObj);
     // Note: the result received back from MongoDB does not contain the
     // entire document that was inserted into the database. Instead, it
     // only contains the _id of the document (and an acknowledged field).
-    return res;
+    // return res;
   }
 
   // DELETE a review from the database.

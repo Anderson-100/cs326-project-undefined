@@ -21,8 +21,7 @@ export async function getCourse(course) {
 }
 
 export async function getReviewPage(courseName) {
-  const response = await fetch(
-    `/review/${courseName}`,
+  const response = await fetch(`/review/${courseName}`,
     {
       method: 'GET',
     }
@@ -31,15 +30,19 @@ export async function getReviewPage(courseName) {
   return data;
 }
 
-export async function postReview(courseName) {
-  const response = await fetch(
-    `/review/post/${courseName}`,
-    {
-      method: 'POST',
-    }
-  );
-  const data = await response.json();
-  return data;
+export async function postReview(courseName, reviewObj) {
+  // console.log("crud.js");
+  // console.log(reviewObj);
+  const response = await fetch(`/review/post/${courseName}`, 
+  {
+    method: 'POST',
+    body: JSON.stringify(reviewObj),
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  });
+  // const data = await response.json();
+  // return data;
 }
 
 export async function editReview(courseName) {

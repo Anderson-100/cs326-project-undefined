@@ -1,4 +1,6 @@
 import express from 'express';
+import cors from 'cors';
+import bp from 'body-parser';
 import { Database } from './database.js';
 
 class Server {
@@ -6,6 +8,9 @@ class Server {
     this.dburl = dburl;
     this.app = express();
     this.app.use('/', express.static('client'));
+    this.app.use(express.json());
+    this.app.use(express.urlencoded());
+    this.app.use(cors());
   }
 
   async initRoutes() {
@@ -41,15 +46,18 @@ class Server {
     //   }
     // });
 
-    // this.app.post(`/review/`, async (req, res) => {
-    //   try {
-    //     const { courseName } = req.query;
-    //     const person = await self.db.updatePerson(id, name, age);
-    //     res.send(JSON.stringify(person));
-    //   } catch (err) {
-    //     res.status(500).send(err);
-    //   }
-    // });
+    this.app.post(`/review/post/:courseName`, async (req, res) => {
+      try {
+        const { courseName } = req.params;
+        const reviewObj = req.body;
+        // console.log("index.js");
+        // console.log(reviewObj);
+        await self.db.addReview(courseName, reviewObj);
+        res.status(200);
+      } catch (err) {
+        res.status(500).send(err);
+      }
+    });
 
     
   }

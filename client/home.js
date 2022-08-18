@@ -130,7 +130,7 @@ class CoursePageApp {
     document.title = `${courseObj.name} - UMass Course Review`;
 
     const element = document.createElement('div');
-    element.appendChild(this.header.render("UMass Course Review", `${this.course.name}: ${this.course.title}`));
+    element.appendChild(this.header.render("UMass Course Review", `${courseObj.name}: ${courseObj.title}`));
     element.appendChild(this.description.render(courseObj.description));
     element.appendChild(this.avg.render(courseObj));
 
@@ -180,8 +180,8 @@ class Averages {
     // this.button = new CourseButton();
   }
 
-  render(course) {
-    this.course = course;
+  render(courseObj) {
+    this.course = courseObj;
 
     const table = document.createElement("div");
     table.id = "averages";
@@ -212,17 +212,17 @@ class Averages {
     // dataRow.classList.add("title");
 
     const ratingDataCol = this.col.render();
-    ratingDataCol.innerHTML = this._avg("rating");
+    ratingDataCol.innerHTML = this.course.rating;
     ratingDataCol.classList.add('average');
     dataRow.appendChild(ratingDataCol);
 
     const diffDataCol = this.col.render();
-    diffDataCol.innerHTML = this._avg("difficulty");
+    diffDataCol.innerHTML = this.course.difficulty;
     diffDataCol.classList.add('average');
     dataRow.appendChild(diffDataCol);
 
     const gradeDataCol = this.col.render();
-    gradeDataCol.innerHTML = this._avgGrade();
+    gradeDataCol.innerHTML = this.course.grade;
     gradeDataCol.classList.add('average');
     dataRow.appendChild(gradeDataCol);
 
@@ -578,6 +578,7 @@ class SubmitButton {
           rating: ratingQ,
           text: reviewText
         }
+        crud.postReview(course, newReview);
         // courses[courseNumber].reviews.push(newReview);
         // console.log(course);
         startCoursePage(course);
