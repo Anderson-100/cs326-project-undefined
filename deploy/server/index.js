@@ -36,6 +36,10 @@ class Server {
     // Note: when using arrow functions, the "this" binding is lost.
     const self = this;
 
+    this.app.get('/', async (req, res) => {
+      res.status(200);
+    });
+
     this.app.get('/getAllCourses', async (req, res) => {
       try {
         const courses = await self.db.getAllCourses();
