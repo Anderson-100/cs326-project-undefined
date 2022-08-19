@@ -111,6 +111,22 @@ export class Database {
     return res;
   }
 
+  // Get reviews of a specific user
+  async getReviewsOf(username) {
+    const data = await this.collection.find({}).toArray();
+    const reviews = [];
+
+    for (const course of data) {
+      for (const review of course.reviews) {
+        if (review.user === username) {
+          reviews.push(review);
+        }
+      }
+    }
+
+    return reviews;
+  }
+
   // Update average values
   async updateAverages(courseName) {
     const courseData = await this.collection.findOne({ _id: courseName });

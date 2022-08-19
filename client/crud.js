@@ -30,9 +30,23 @@ export async function getReviewPage(courseName) {
   const response = await fetch(`/review/${courseName}`,
     {
       method: 'GET',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
     }
   );
   const data = await response.json();
+  return data;
+}
+
+export async function getReviewsOf(userName) {
+  const response = await fetch(`/reviews/${userName}`,
+    {
+      method: 'GET',
+    }
+  );
+  const data = await response.json();
+  console.log(data);
   return data;
 }
 
@@ -69,6 +83,56 @@ export async function deleteReview(courseName) {
       method: 'DELETE',
     }
   );
+  const data = await response.json();
+  return data;
+}
+
+export async function login(username, password) {
+  const response = await fetch(`/login`,
+  {
+    method: 'POST',
+    body: JSON.stringify({ username: username, password: password}),
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  });
+  const data = await response.json();
+  return data;
+}
+
+export async function isLoggedIn() {
+  const response = await fetch(`/isLoggedIn`,
+  {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  });
+  const data = await response.json();
+  return data.isLoggedIn;
+}
+
+export async function getUsername() {
+  const response = await fetch(`/username`,
+  {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  });
+  const data = await response.json();
+  // console.log(data);
+  return data;
+}
+
+export async function logout() {
+  const response = await fetch(`/logout`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  });
   const data = await response.json();
   return data;
 }

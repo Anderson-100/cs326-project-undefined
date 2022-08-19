@@ -16,8 +16,9 @@ const sessionConfig = {
   saveUninitialized: false,
 };
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(dirname(__filename));
+
+let _isLoggedIn = false;
+let _username;
 
 class Server {
   constructor(dburl) {
@@ -57,16 +58,6 @@ class Server {
       }
     });
 
-    // this.app.get(`/review/`, async (req, res) => {
-    //   try {
-    //     const { courseName } = req.query;
-    //     const person = await self.db.readPerson(id);
-    //     res.send(JSON.stringify(person));
-    //   } catch (err) {
-    //     res.status(500).send(err);
-    //   }
-    // });
-
     this.app.post(`/review/post/:courseName`, async (req, res) => {
       try {
         const { courseName } = req.params;
@@ -81,92 +72,57 @@ class Server {
       }
     });
 
+    this.app.get(`/reviews/:username`, async (req, res) => {
+      try {
+        const { username } = req.params;
+        const reviewArr = await self.db.getReviewsOf(username);
+        res.send(reviewArr);
+      } catch (err) {
+        res.status(500).send(err);
+      }
+    })
+
     // Login stuff
-    this.app.get('/login', (req, res) => {
-      const { username, password } = req.query;
+    this.app.post('/login', (req, res) => {
+      const { username, password } = req.body;
       if (users.validatePassword(username, password)) {
-        console.log(username + " added!");
-        // res.send({ ok: true });
-        res.redirect('/');
+        console.log(username + " logged in!");
+        _isLoggedIn = true;
+        _username = username
+        res.send({ ok: true });
       } else {
-        console.log("not added");
-        // res.send({ ok: false });
-        res.redirect('/');
+        console.log("not logged in");
+        res.status(500).send({ ok: false });
       }
     });
 
-    this.app.get('/loginSuccess', (req, res) => {
-      res.send({ ok: true });
-    });
-
-    this.app.get('/loginSuccess', (req, res) => {
-      res.send({ ok: false });
-    });
-
+    this.app.get('/username', (req, res) => {
+      if (_isLoggedIn) {
+        res.send({ ok: true, username: _username });
+      } else {
+        res.send( { ok: false });
+      }
+    })
     
-
-    this.app.get('/logout', (req, res) => {
-      req.logout();
-      res.redirect('/login');
+    this.app.post('/logout', (req, res) => {
+      _isLoggedIn = false;
+      res.send({ ok: true });
     });
 
     this.app.post('/register', (req, res) => {
       const { username, password } = req.body;
       if (users.addUser(username, password)) {
-        console.log(username + " added!");
+        // console.log(username + " added!");
         res.send({ ok: true });
       } else {
         res.send({ ok: false });
       }
     });
 
-    this.app.get('/register', (req, res) => {
-      const { username, password } = req.query;
-      if (users.addUser(username, password)) {
-        console.log(username + " added!");
-        res.json({ ok: true });
-      } else {
-        console.log("not added");
-        res.send({ ok: false });
-      }
+
+    this.app.get('/isLoggedIn', (req, res) => {
+      res.send({ isLoggedIn: _isLoggedIn });
     });
-
-    // Private data
-    this.app.get(
-      '/private',
-      this.checkLoggedIn, // If we are logged in (notice the comma!)...
-      (req, res) => {
-        // Go to the user's page.
-        res.redirect('/private/' + req.user);
-      }
-    );
-
-    // A dummy page for the user.
-    this.app.get(
-      '/private/:userID/',
-      this.checkLoggedIn, // We also protect this route: authenticated...
-      (req, res) => {
-        // Verify this is the right user.
-        if (req.params.userID === req.user) {
-          res.writeHead(200, { 'Content-Type': 'text/html' });
-          res.write('<H1>HELLO ' + req.params.userID + '</H1>');
-          res.write('<br/><a href="/logout">click here to logout</a>');
-          res.end();
-        } else {
-          res.redirect('/private/');
-        }
-      }
-    );
-  }
-
-  checkLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) {
-      // If we are authenticated, run the next route.
-      next();
-    } else {
-      // Otherwise, redirect to the login page.
-      res.redirect('/login');
-    }
   }
 
   async initDb() {

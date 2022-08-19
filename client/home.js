@@ -6,14 +6,23 @@ class HomePageApp {
   constructor() {
     this.header = new Header();
     this.login = new LoginButton();
+    this.logout = new LogoutButton();
+    this.profile = new UserProfileButton();
     this.courses = new Courses();
   }
 
   async render() {
     const element = document.createElement('div');
     element.appendChild(this.header.render("UMass Course Review", "Computer Science"));
-    element.appendChild(this.login.render(true));
-    element.appendChild(this.login.render(false));
+    
+    const isLoggedIn = await crud.isLoggedIn();
+    if (isLoggedIn) {
+      element.appendChild(this.profile.render());
+      element.appendChild(this.logout.render());
+    } else {
+      element.appendChild(this.login.render(true));
+      element.appendChild(this.login.render(false));
+    }
     element.appendChild(await this.courses.render());
     return element;
   }
@@ -27,6 +36,33 @@ class LoginButton {
     button.value = isLogin ? 'Log In' : 'Register';
     button.addEventListener('click', () => {
       isLogin? startLoginPage() : startRegisterPage();
+    });
+    return button;
+  }
+}
+
+class LogoutButton {
+  render() {
+    const button = document.createElement('input');
+    button.classList.add("review-button");
+    button.type = 'button';
+    button.value = 'Log Out';
+    button.addEventListener('click', () => {
+      crud.logout();
+      startHomePage();
+    });
+    return button;
+  }
+}
+
+class UserProfileButton {
+  render() {
+    const button = document.createElement('input');
+    button.classList.add("review-button");
+    button.type = 'button';
+    button.value = 'Profile';
+    button.addEventListener('click', () => {
+      startUserProfilePage();
     });
     return button;
   }
@@ -159,7 +195,7 @@ class CoursePageApp {
     element.appendChild(this.reviewHeader.render());
     element.appendChild(this.addReviewButton.render(this.course));
     element.appendChild(this.break.render());
-    element.appendChild(this.reviews.render(courseObj.reviews));
+    element.appendChild(this.reviews.render(courseObj.reviews, false));
     return element;
   }
 }
@@ -277,9 +313,10 @@ class Reviews {
     this.col = new TableCol();
     this.button = new CourseButton();
     this.space = new LineBreak();
+    this.delete = new DeleteButton();
   }
 
-  render(courseReviews) {
+  render(courseReviews, isUser) {
     const table = document.createElement("div");
     table.id = "courses";
     table.classList.add("container");
@@ -311,6 +348,12 @@ class Reviews {
       reviewText.classList.add("review-text");
       reviewText.innerHTML = review.text;
       table.appendChild(reviewText);
+
+      // Add delete button if this is the list of user reviews
+      if (isUser) {
+        const delButton = this.delete.render();
+        table.appendChild(delButton);
+      }
 
       // Create a line break for spacing
       // const lineBreak = document.createElement('br');
@@ -573,6 +616,7 @@ class SubmitButton {
       }
       else {
         const newReview = {
+          user: "aaa",
           grade: gradesQ,
           difficulty: diffQ,
           rating: ratingQ,
@@ -600,9 +644,16 @@ class LineBreak {
 // ----------------------------------------
 // Login Page
 class LoginPage {
+  constructor() {
+    this.backButton = new BackToHomeButton();
+  }
+
   render(isLogin) {
     // Div to contain everything
     const element = document.createElement('div');
+
+    // Back Button
+    element.appendChild(this.backButton.render());
 
     // Header
     const header = document.createElement('h1');
@@ -645,6 +696,12 @@ class LoginPage {
 
       if (isLogin) {
         const res = await crud.login(username, password);
+
+        if (res.ok) {
+          startHomePage();
+        } else {
+          alert("Username or password incorrect. Try again");
+        }
       } else {
         const res = await crud.register(username, password);
 
@@ -668,44 +725,91 @@ class LoginPage {
 }
 
 
+// ----------------------------------------
+// User Profile Page (can only be accessed when logged in)
+class UserProfilePage {
+  constructor() {
+    this.backButton = new BackToHomeButton();
+    this.reviews = new Reviews();
+  }
+
+  async render() {
+    const div = document.createElement('div');
+    
+    // Back Button
+    const backButton = this.backButton.render();
+    div.appendChild(backButton);
+
+    const userReviews = await this._filterReviewsByUser();
+
+    const reviews = this.reviews.render(userReviews, true);
+    div.appendChild(reviews);
+
+    return div;
+  }
+
+  async _filterReviewsByUser() {
+    const usernameData = await crud.getUsername();
+    const curUsername = usernameData.username;
+    const userReviews = await crud.getReviewsOf(curUsername);
+    return userReviews;
+  }
+}
+
+class DeleteButton {
+  render() {
+    const button = document.createElement('input');
+    button.type = 'button';
+    button.classList.add('review-button');
+    button.value = 'Delete';
+    return button;
+  }
+}
 
 
 // ----------------------------------------
 
 // Start the app
-export async function startHomePage() {
+async function startHomePage() {
   const app = new HomePageApp();
   const root = document.getElementById('app');
   root.innerHTML = "";
   root.appendChild(await app.render());
 }
 
-export async function startCoursePage(courseName) {
+async function startCoursePage(courseName) {
   const app = new CoursePageApp(courseName);
   const root = document.getElementById('app');
   root.innerHTML = "";
   root.appendChild(await app.render());
 }
 
-export async function startReviewPage(courseName) {
+async function startReviewPage(courseName) {
   const app = new ReviewPageApp(courseName);
   const root = document.getElementById('app');
   root.innerHTML = "";
   root.appendChild(await app.render());
 }
 
-export function startLoginPage() {
+function startLoginPage() {
   const app = new LoginPage();
   const root = document.getElementById('app');
   root.innerHTML = "";
   root.appendChild(app.render(true));
 }
 
-export function startRegisterPage() {
+function startRegisterPage() {
   const app = new LoginPage();
   const root = document.getElementById('app');
   root.innerHTML = "";
   root.appendChild(app.render(false));
+}
+
+async function startUserProfilePage() {
+  const app = new UserProfilePage();
+  const root = document.getElementById('app');
+  root.innerHTML = "";
+  root.appendChild(await app.render());
 }
 
 startHomePage();
