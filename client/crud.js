@@ -72,3 +72,16 @@ export async function deleteReview(courseName) {
   const data = await response.json();
   return data;
 }
+
+export async function register(username, password) {
+  const response = await fetch(`/register`,
+  {
+    method: 'POST',
+    body: JSON.stringify({ username: username, password: password}),
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  });
+  const data = await response.json();
+  return data;
+}

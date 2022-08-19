@@ -82,20 +82,28 @@ class Server {
     });
 
     // Login stuff
-    this.app.get('/', this.checkLoggedIn, (req, res) => {
-      res.send('hello world');
-    });
-
     this.app.get('/login', (req, res) => {
-
+      const { username, password } = req.query;
+      if (users.validatePassword(username, password)) {
+        console.log(username + " added!");
+        // res.send({ ok: true });
+        res.redirect('/');
+      } else {
+        console.log("not added");
+        // res.send({ ok: false });
+        res.redirect('/');
+      }
     });
 
-    this.app.post('/login',
-      auth.authenticate('local', {
-        successRedirect: '/private',
-        failureRedirect: '/login',
-      })
-    );
+    this.app.get('/loginSuccess', (req, res) => {
+      res.send({ ok: true });
+    });
+
+    this.app.get('/loginSuccess', (req, res) => {
+      res.send({ ok: false });
+    });
+
+    
 
     this.app.get('/logout', (req, res) => {
       req.logout();
@@ -105,14 +113,22 @@ class Server {
     this.app.post('/register', (req, res) => {
       const { username, password } = req.body;
       if (users.addUser(username, password)) {
-        res.redirect('/login');
+        console.log(username + " added!");
+        res.send({ ok: true });
       } else {
-        res.redirect('register');
+        res.send({ ok: false });
       }
     });
 
     this.app.get('/register', (req, res) => {
-      res.sendFile('client/register.html', { root: __dirname });
+      const { username, password } = req.query;
+      if (users.addUser(username, password)) {
+        console.log(username + " added!");
+        res.json({ ok: true });
+      } else {
+        console.log("not added");
+        res.send({ ok: false });
+      }
     });
 
     // Private data
@@ -163,7 +179,7 @@ class Server {
     await this.initDb();
     const port = process.env.PORT || 3000;
     this.app.listen(port, () => {
-      console.log(`PeopleServer listening on port ${port}!`);
+      console.log(`Server listening on port ${port}!`);
     });
   }
 }

@@ -5,14 +5,30 @@ import * as crud from "./crud.js";
 class HomePageApp {
   constructor() {
     this.header = new Header();
+    this.login = new LoginButton();
     this.courses = new Courses();
   }
 
   async render() {
     const element = document.createElement('div');
     element.appendChild(this.header.render("UMass Course Review", "Computer Science"));
+    element.appendChild(this.login.render(true));
+    element.appendChild(this.login.render(false));
     element.appendChild(await this.courses.render());
     return element;
+  }
+}
+
+class LoginButton {
+  render(isLogin) {
+    const button = document.createElement('input');
+    button.classList.add("review-button");
+    button.type = 'button';
+    button.value = isLogin ? 'Log In' : 'Register';
+    button.addEventListener('click', () => {
+      isLogin? startLoginPage() : startRegisterPage();
+    });
+    return button;
   }
 }
 
@@ -581,6 +597,78 @@ class LineBreak {
 
 
 
+// ----------------------------------------
+// Login Page
+class LoginPage {
+  render(isLogin) {
+    // Div to contain everything
+    const element = document.createElement('div');
+
+    // Header
+    const header = document.createElement('h1');
+    header.textContent = isLogin ? "Login" : "Register";
+    element.appendChild(header);
+
+    // Form
+    const form = document.createElement('login_form');
+    form.action = isLogin? '/login' : '/register';
+    // form.method = 'post';
+
+    // Username
+    const usernameDiv = document.createElement('div');
+    const usernameLabel = document.createElement('label');
+    usernameLabel.textContent = 'Username:';
+    const usernameInput = document.createElement('input');
+    usernameInput.type = 'text';
+    usernameInput.name = 'username';
+    usernameDiv.appendChild(usernameLabel);
+    usernameDiv.appendChild(usernameInput);
+
+    // Password
+    const passwordDiv = document.createElement('div');
+    const passwordLabel = document.createElement('label');
+    passwordLabel.textContent = 'Password:';
+    const passwordInput = document.createElement('input');
+    passwordInput.type = 'password';
+    passwordInput.name = 'password';
+    passwordDiv.appendChild(passwordLabel);
+    passwordDiv.appendChild(passwordInput);
+
+    // Submit button
+    const submitDiv = document.createElement('div');
+    const submitInput = document.createElement('input');
+    submitInput.type = 'button';
+    submitInput.value = isLogin ? 'Log In' : 'Register';
+    submitInput.addEventListener('click', async () =>{
+      const username = document.getElementsByName('username')[0].value;
+      const password = document.getElementsByName('password')[0].value;
+
+      if (isLogin) {
+        const res = await crud.login(username, password);
+      } else {
+        const res = await crud.register(username, password);
+
+        if (res.ok) {
+          startLoginPage();
+        } else {
+          alert("This username has already been taken");
+        }
+     }
+    });
+    submitDiv.appendChild(submitInput);
+
+    form.appendChild(usernameDiv);
+    form.appendChild(passwordDiv);
+    form.appendChild(submitDiv);
+
+    element.appendChild(form);
+
+    return element;
+  }
+}
+
+
+
 
 // ----------------------------------------
 
@@ -604,6 +692,20 @@ export async function startReviewPage(courseName) {
   const root = document.getElementById('app');
   root.innerHTML = "";
   root.appendChild(await app.render());
+}
+
+export function startLoginPage() {
+  const app = new LoginPage();
+  const root = document.getElementById('app');
+  root.innerHTML = "";
+  root.appendChild(app.render(true));
+}
+
+export function startRegisterPage() {
+  const app = new LoginPage();
+  const root = document.getElementById('app');
+  root.innerHTML = "";
+  root.appendChild(app.render(false));
 }
 
 startHomePage();
