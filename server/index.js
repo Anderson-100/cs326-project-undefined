@@ -74,6 +74,7 @@ class Server {
         // console.log("index.js");
         // console.log(reviewObj);
         await self.db.addReview(courseName, reviewObj);
+        await self.db.updateAverages(courseName);
         res.status(200);
       } catch (err) {
         res.status(500).send(err);

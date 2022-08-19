@@ -1,3 +1,8 @@
+/*
+This was the database file used when I was using a local json file for data storage.
+This file is not used anymore, but is kept here for future reference.
+*/
+
 import 'dotenv/config';
 import { MongoClient, ServerApiVersion } from 'mongodb';
 import { readFile, writeFile } from 'fs/promises';
