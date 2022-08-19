@@ -48,9 +48,10 @@ class Server {
       try {
         const { course } = req.params;
         const courseObj = await self.db.getCourse(course);
-        // res.send(courseObj);
-        
-        res.status(200);
+        // console.log(courseObj);
+        res.send(courseObj);
+
+        // res.status(200);
       } catch (err) {
         res.status(500).send(err);
       }

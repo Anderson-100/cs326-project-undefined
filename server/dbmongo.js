@@ -103,7 +103,7 @@ export class Database {
     reviews.push(reviewObj);
     const res = await this.collection.updateOne(
       { _id: courseName },
-      { $set: { reviews }}
+      { $set: { reviews: reviews }}
     )
   }
 }

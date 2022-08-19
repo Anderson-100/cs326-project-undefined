@@ -17,13 +17,14 @@ class HomePageApp {
 }
 
 class CourseButton {
-  render(course, courseObj) {
+  render(courseObj) {
     const button = document.createElement('input');
     button.classList.add("course-name");
     button.type = 'button';
     button.value = courseObj.name;
+    // console.log(course);
     button.addEventListener('click', () => {
-      startCoursePage(course);
+      startCoursePage(courseObj._id);
     });
 
     return button;
@@ -47,14 +48,15 @@ class Courses {
 
     const courses = await crud.getAllCourses();
     // console.log(courses);
-    for (const course in courses) {
+    for (const cnt in courses) {
       // display the name of the course
       // each of these will be a button that gets the info page
       // of the corresponding course
-      // console.log(course);
+      // console.log(courses[cnt]);
+      const curCourse = courses[cnt]
       const nameRow = this.row.render();
       const nameCol = this.col.render();
-      const courseButton = this.button.render(course, courses[course]);
+      const courseButton = this.button.render(curCourse);
       nameCol.append(courseButton);
       nameRow.appendChild(nameCol);
       table.appendChild(nameRow);
@@ -63,7 +65,7 @@ class Courses {
       const titleRow = this.row.render();
       const titleCol = this.col.render();
       titleCol.classList.add("title");
-      titleCol.innerHTML = courses[course].title;
+      titleCol.innerHTML = curCourse.title;
       titleRow.appendChild(titleCol);
       table.appendChild(titleRow);
 
@@ -71,10 +73,10 @@ class Courses {
       const infoRow = this.row.render();
 
       function generateAvgText(element, isNumber) {
-        if (courses[course][element] === 0) { 
+        if (curCourse[element] === 0) { 
           return "<b>N/A<b>";
         }
-        let text = "<b>" + courses[course][element] + "</b>";
+        let text = "<b>" + curCourse[element] + "</b>";
         if (isNumber) {
           text += "/5";
         }
@@ -126,6 +128,7 @@ class CoursePageApp {
   async render() {
     // This will show the name of the course being displayed
     // when I implement the backend
+    // console.log(this.course)
     const courseObj = await crud.getCourse(this.course);
 
     document.title = `${courseObj.name} - UMass Course Review`;
@@ -604,4 +607,3 @@ export async function startReviewPage(courseName) {
 }
 
 startHomePage();
-

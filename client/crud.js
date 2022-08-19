@@ -1,8 +1,10 @@
 export async function getAllCourses() {
-  const response = await fetch(
-    '/getAllCourses',
+  const response = await fetch('/getAllCourses',
     {
       method: 'GET',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
     }
   );
   const data = await response.json();
@@ -10,13 +12,17 @@ export async function getAllCourses() {
 }
 
 export async function getCourse(course) {
-  const response = await fetch(
-    `/course/${course}`,
+  // console.log(course);
+  const response = await fetch(`/course/${course}`,
     {
       method: 'GET',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
     }
   );
   const data = await response.json();
+  // console.log(data);
   return data;
 }
 
