@@ -49,7 +49,6 @@ class Server {
       try {
         const { course } = req.params;
         const courseObj = await self.db.getCourse(course);
-        // console.log(courseObj);
         res.send(courseObj);
 
         // res.status(200);
@@ -62,8 +61,6 @@ class Server {
       try {
         const { courseName } = req.params;
         const reviewObj = req.body;
-        // console.log("index.js");
-        // console.log(reviewObj);
         await self.db.addReview(courseName, reviewObj);
         await self.db.updateAverages(courseName);
         res.status(200);
@@ -83,7 +80,6 @@ class Server {
     })
 
     this.app.delete(`/review/delete`, async (req, res) => {
-      console.log("yeet");
       if (!_isLoggedIn) {
         res.status(500);
       }
@@ -96,12 +92,10 @@ class Server {
     this.app.post('/login', (req, res) => {
       const { username, password } = req.body;
       if (users.validatePassword(username, password)) {
-        // console.log(username + " logged in!");
         _isLoggedIn = true;
-        _username = username
+        _username = username;
         res.send({ ok: true });
       } else {
-        // console.log("not logged in");
         res.status(500).send({ ok: false });
       }
     });
@@ -122,7 +116,6 @@ class Server {
     this.app.post('/register', (req, res) => {
       const { username, password } = req.body;
       if (users.addUser(username, password)) {
-        // console.log(username + " added!");
         res.send({ ok: true });
       } else {
         res.send({ ok: false });

@@ -12,7 +12,6 @@ export async function getAllCourses() {
 }
 
 export async function getCourse(course) {
-  // console.log(course);
   const response = await fetch(`/course/${course}`,
     {
       method: 'GET',
@@ -22,7 +21,6 @@ export async function getCourse(course) {
     }
   );
   const data = await response.json();
-  // console.log(data);
   return data;
 }
 
@@ -46,13 +44,10 @@ export async function getReviewsOf(userName) {
     }
   );
   const data = await response.json();
-  // console.log(data);
   return data;
 }
 
 export async function postReview(courseName, reviewObj) {
-  // console.log("crud.js");
-  // console.log(reviewObj);
   const response = await fetch(`/review/post/${courseName}`, 
   {
     method: 'POST',
@@ -75,7 +70,6 @@ export async function deleteReview(id) {
     },
   });
   const data = await response.json();
-  console.log(data);
   return data;
 }
 
@@ -113,7 +107,6 @@ export async function getUsername() {
     },
   });
   const data = await response.json();
-  // console.log(data);
   return data;
 }
 

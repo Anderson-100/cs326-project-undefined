@@ -74,7 +74,6 @@ class CourseButton {
     button.classList.add("course-name");
     button.type = 'button';
     button.value = courseObj.name;
-    // console.log(course);
     button.addEventListener('click', () => {
       startCoursePage(courseObj._id);
     });
@@ -99,12 +98,11 @@ class Courses {
     // table.innerHTML = "hello";
 
     const courses = await crud.getAllCourses();
-    // console.log(courses);
     for (const cnt in courses) {
       // display the name of the course
       // each of these will be a button that gets the info page
       // of the corresponding course
-      // console.log(courses[cnt]);
+
       const curCourse = courses[cnt]
       const nameRow = this.row.render();
       const nameCol = this.col.render();
@@ -180,7 +178,6 @@ class CoursePageApp {
   async render() {
     // This will show the name of the course being displayed
     // when I implement the backend
-    // console.log(this.course)
     const courseObj = await crud.getCourse(this.course);
 
     document.title = `${courseObj.name} - UMass Course Review`;
@@ -392,7 +389,7 @@ class ReviewPageApp {
     document.title = "Submit a Review - UMass Course Review "
     const element = document.createElement('div');
 
-    element.appendChild(this.header.render("UMass Course Review", `Submit a Review for: ${this.course.name}`));
+    element.appendChild(this.header.render("UMass Course Review", `Submit a Review for: ${this.course}`));
 
     element.appendChild(this.gradeQuestion.render());
     element.appendChild(this.break.render());
@@ -599,7 +596,7 @@ class SubmitButton {
     button.type = 'button';
     button.classList.add('review-button');
     button.value = 'Submit Review';
-    button.addEventListener('click', () => {
+    button.addEventListener('click', async () => {
       
       function getInput(question) {
         const qElements = document.getElementsByName(question);
@@ -622,17 +619,17 @@ class SubmitButton {
         alert("Please fill in all the questions");
       }
       else {
+        const usernameData = await crud.getUsername();
+        const username = usernameData.username;
         const newReview = {
           id: Date.now(),
-          user: "aaa",
+          user: username,
           grade: gradesQ,
           difficulty: diffQ,
           rating: ratingQ,
           text: reviewText
         }
         crud.postReview(course, newReview);
-        // courses[courseNumber].reviews.push(newReview);
-        // console.log(course);
         startCoursePage(course);
       }
     })
@@ -758,11 +755,9 @@ class UserProfilePage {
     
     // Back Button
     const backButton = this.backButton.render();
-    div.appendChild(backButton);
-
     const userReviews = await this._filterReviewsByUser();
-
     const reviews = this.reviews.render(userReviews, true);
+    div.appendChild(backButton);
     div.appendChild(reviews);
 
     return div;

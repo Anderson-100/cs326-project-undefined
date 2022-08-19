@@ -112,11 +112,9 @@ export class Database {
   }
 
   async deleteReview(id) {
-    console.log("hey");
     const courses = await this.collection.find({}).toArray();
     let courseName;
     let reviews;
-    console.log(courses);
 
     for (let i = 0; i < courses.length; i++) {
       courseName = courses[i]._id;
@@ -192,7 +190,6 @@ export class Database {
       }
 
       for (const letter in gradeToNum) {
-        // console.log(courseObj.grade);
         if (gradeToNum[letter] === avg) {
           // Save new grade
           return letter;
